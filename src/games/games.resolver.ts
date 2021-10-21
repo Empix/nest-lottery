@@ -53,4 +53,13 @@ export class GamesResolver {
   ) {
     return await this.gamesService.delete(id);
   }
+
+  @UseGuards(GqlAuthGuard)
+  @Mutation(() => GameDTO)
+  async restoreGame(
+    @Args('id')
+    id: number,
+  ) {
+    return await this.gamesService.restore(id);
+  }
 }

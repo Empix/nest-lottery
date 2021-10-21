@@ -39,4 +39,11 @@ export class GamesService {
 
     return true;
   }
+
+  async restore(id: number) {
+    await this.gamesRepository.restore({ id });
+    const game = await this.gamesRepository.findOne({ id });
+
+    return game;
+  }
 }
