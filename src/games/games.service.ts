@@ -33,4 +33,10 @@ export class GamesService {
 
     return game;
   }
+
+  async delete(id: number) {
+    await this.gamesRepository.softDelete({ id });
+
+    return true;
+  }
 }

@@ -38,4 +38,12 @@ export class GamesResolver {
   ) {
     return await this.gamesService.update(id, data);
   }
+
+  @Mutation(() => Boolean)
+  async deleteGame(
+    @Args('id')
+    id: number,
+  ) {
+    return await this.gamesService.delete(id);
+  }
 }
