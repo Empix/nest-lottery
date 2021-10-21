@@ -22,11 +22,11 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, data: UpdateUserInput) {
-    await this.usersRepository.update({ id }, { ...data });
-    const user = await this.findOne({ id });
+  async update(user: User, data: UpdateUserInput) {
+    await this.usersRepository.update({ id: user.id }, { ...data });
+    const updatedUser = await this.usersRepository.findOne({ id: user.id });
 
-    return user;
+    return updatedUser;
   }
 
   async store(data: CreateUserInput) {

@@ -40,12 +40,12 @@ export class UsersResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => UserDTO)
   async updateUser(
-    @Args('id')
-    id: number,
+    @CurrentUser()
+    currentUser: User,
     @Args('data')
     data: UpdateUserInput,
   ) {
-    return await this.usersService.update(id, data);
+    return await this.usersService.update(currentUser, data);
   }
 
   @Mutation(() => UserDTO)

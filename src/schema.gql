@@ -55,7 +55,7 @@ type Query {
 }
 
 type Mutation {
-  updateUser(data: UpdateUserInput!, id: Float!): User!
+  updateUser(data: UpdateUserInput!): User!
   storeUser(data: CreateUserInput!): User!
   deleteUser: Boolean!
   storeGame(data: StoreGameInput!): Game!
