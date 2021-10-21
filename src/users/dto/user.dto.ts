@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, HideField, ID, ObjectType } from '@nestjs/graphql';
 
 @ObjectType('User')
 export class UserDTO {
-  @Field(() => ID)
+  @HideField()
   id: number;
 
   @Field()
@@ -11,7 +11,7 @@ export class UserDTO {
   @Field()
   email: string;
 
-  @Field()
+  @HideField()
   password: string;
 
   @Field()
@@ -20,9 +20,9 @@ export class UserDTO {
   @Field()
   role: string;
 
-  @Field()
+  @HideField()
   created_at: Date;
 
-  @Field()
+  @HideField()
   updated_at: Date;
 }
