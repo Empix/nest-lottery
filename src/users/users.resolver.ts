@@ -13,11 +13,13 @@ import { User } from './entities/user.entity';
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [UserDTO])
   async findAllUsers() {
     return await this.usersService.findAll();
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => UserDTO)
   async findOneUser(
     @Args('id')
@@ -26,6 +28,7 @@ export class UsersResolver {
     return await this.usersService.findOne({ id });
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => UserDTO)
   async updateUser(
     @Args('id')
