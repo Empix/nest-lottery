@@ -13,15 +13,22 @@ export class BetsService {
   ) {}
 
   async findAll() {
-    return await this.betsRepository.find();
+    return await this.betsRepository.find({
+      relations: ['user', 'game'],
+    });
   }
 
   async findOne(id: number) {
-    return await this.betsRepository.findOne(id);
+    return await this.betsRepository.findOne(id, {
+      relations: ['user', 'game'],
+    });
   }
 
   async findAllFromUser(user: User) {
-    return await this.betsRepository.find({ user_id: user.id });
+    return await this.betsRepository.find({
+      where: { user_id: user.id },
+      relations: ['user', 'game'],
+    });
   }
 
   async storeMany(id: number, data: StoreBetInput[]) {
@@ -37,7 +44,9 @@ export class BetsService {
     const bets = this.betsRepository.create(allBets as any);
     await this.betsRepository.save(bets);
 
-    const savedBets = await this.betsRepository.findByIds(bets);
+    const savedBets = await this.betsRepository.findByIds(bets, {
+      relations: ['user', 'game'],
+    });
 
     return savedBets;
   }
