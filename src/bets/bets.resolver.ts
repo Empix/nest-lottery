@@ -11,11 +11,13 @@ import { StoreBetInput } from './dto/store-bet.input';
 export class BetsResolver {
   constructor(private readonly betsService: BetsService) {}
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => [BetDTO])
   async findAllBets() {
     return await this.betsService.findAll();
   }
 
+  @UseGuards(GqlAuthGuard)
   @Query(() => BetDTO)
   async findOneBet(
     @Args('id')
@@ -30,6 +32,7 @@ export class BetsResolver {
     return await this.betsService.findAllFromUser(user);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => [BetDTO])
   async storeManyBets(
     @Args('user_id')
