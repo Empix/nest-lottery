@@ -31,23 +31,10 @@ export class BetsService {
     });
   }
 
-  async storeMany(id: number, data: StoreBetInput[]) {
-    /**
-     * Talvez utilizar cascade aqui faça sentido
-     * https://stackoverflow.com/questions/55098023/typeorm-cascade-option-cascade-ondelete-onupdate
-     */
-    const allBets = data.map((bet) => {
-      bet['user_id'] = id;
-      return bet;
-    });
-
-    const bets = this.betsRepository.create(allBets as any);
+  async storeMany(user: User, data: StoreBetInput[]) {
+    const bets = data.map((bet) => ({ ...bet, user }));
     await this.betsRepository.save(bets);
 
-    const savedBets = await this.betsRepository.findByIds(bets, {
-      relations: ['user', 'game'],
-    });
-
-    return savedBets;
+    return await this.findAllFromUser(user);
   }
 }

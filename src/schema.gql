@@ -62,7 +62,7 @@ type Mutation {
   updateGame(data: UpdateGameInput!, id: Float!): Game!
   deleteGame(id: Float!): Boolean!
   restoreGame(id: Float!): Game!
-  storeManyBets(data: [StoreBetInput!]!, user_id: Float!): [Bet!]!
+  storeManyBets(data: [StoreBetInput!]!): [Bet!]!
   storeForgotPasswordToken(data: CreateForgotPasswordTokenInput!): Boolean!
   updateForgotPasswordToken(data: UpdateForgotPasswordTokenInput!): Boolean!
   login(data: LoginAuthInput!): Auth!

@@ -35,11 +35,11 @@ export class BetsResolver {
   @UseGuards(GqlAuthGuard)
   @Mutation(() => [BetDTO])
   async storeManyBets(
-    @Args('user_id')
-    id: number,
+    @CurrentUser()
+    currentUser: User,
     @Args({ name: 'data', type: () => [StoreBetInput] })
     data: StoreBetInput[],
   ) {
-    return await this.betsService.storeMany(id, data);
+    return await this.betsService.storeMany(currentUser, data);
   }
 }
