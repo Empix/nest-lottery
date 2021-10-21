@@ -46,6 +46,7 @@ type Auth {
 type Query {
   findAllUsers: [User!]!
   findOneUser(id: Float!): User!
+  showUser: User!
   findAllGames: [Game!]!
   findOneGame(id: Float!): Game!
   findAllBets: [Bet!]!

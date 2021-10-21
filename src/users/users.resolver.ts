@@ -29,6 +29,15 @@ export class UsersResolver {
   }
 
   @UseGuards(GqlAuthGuard)
+  @Query(() => UserDTO)
+  async showUser(
+    @CurrentUser()
+    currentUser: User,
+  ) {
+    return currentUser;
+  }
+
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => UserDTO)
   async updateUser(
     @Args('id')
