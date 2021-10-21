@@ -1,6 +1,9 @@
-import { Logger, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
 import { GqlAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { BetsService } from './bets.service';
@@ -11,13 +14,15 @@ import { StoreBetInput } from './dto/store-bet.input';
 export class BetsResolver {
   constructor(private readonly betsService: BetsService) {}
 
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Query(() => [BetDTO])
   async findAllBets() {
     return await this.betsService.findAll();
   }
 
-  @UseGuards(GqlAuthGuard)
+  @UseGuards(GqlAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Query(() => BetDTO)
   async findOneBet(
     @Args('id')
