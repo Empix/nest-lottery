@@ -12,9 +12,6 @@ export class FindOneInput {
   email?: string;
 
   @Field({ nullable: true })
-  password?: string;
-
-  @Field({ nullable: true })
   secure_id?: string;
 
   @Field({ nullable: true })
