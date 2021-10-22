@@ -33,8 +33,8 @@ export class BetsService {
 
   async storeMany(user: User, data: StoreBetInput[]) {
     const bets = data.map((bet) => ({ ...bet, user }));
-    await this.betsRepository.save(bets);
+    const savedBets = await this.betsRepository.save(bets);
 
-    return await this.findAllFromUser(user);
+    return savedBets;
   }
 }
