@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -20,12 +20,18 @@ export class BetsService {
   }
 
   async findOne(conditions: FindOneBetInput) {
-    return await this.betsRepository.findOne(
+    const bet = await this.betsRepository.findOne(
       { ...conditions },
       {
         relations: ['user', 'game'],
       },
     );
+
+    if (!bet) {
+      throw new NotFoundException('Bet not found.');
+    }
+
+    return bet;
   }
 
   async findAllFromUser(user: User) {

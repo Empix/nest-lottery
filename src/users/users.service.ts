@@ -1,4 +1,4 @@
-import { Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
@@ -19,6 +19,10 @@ export class UsersService {
 
   async findOne(condition: FindOneUserInput) {
     const user = await this.usersRepository.findOne({ ...condition });
+
+    if (!user) {
+      throw new NotFoundException('User not found.');
+    }
 
     return user;
   }

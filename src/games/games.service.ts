@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { FindOneGameInput } from './dto/find-one-game.input';
@@ -18,14 +23,28 @@ export class GamesService {
   }
 
   async findOne(condition: FindOneGameInput) {
-    return await this.gamesRepository.findOne({ ...condition });
+    const game = await this.gamesRepository.findOne({ ...condition });
+
+    if (!game) {
+      throw new NotFoundException('Game not found.');
+    }
+
+    return game;
   }
 
   async store(data: StoreGameInput) {
-    const game = this.gamesRepository.create(data);
-    const gameSaved = await this.gamesRepository.save(game);
+    try {
+      const game = this.gamesRepository.create(data);
+      const gameSaved = await this.gamesRepository.save(game);
 
-    return gameSaved;
+      return gameSaved;
+    } catch (err) {
+      if (err.code === 'ER_DUP_ENTRY') {
+        throw new BadRequestException('Duplicated game.');
+      }
+
+      throw new InternalServerErrorException('An unknown error has occurred.');
+    }
   }
 
   async update(id: number, data: UpdateGameInput) {
@@ -36,7 +55,11 @@ export class GamesService {
   }
 
   async delete(id: number) {
-    await this.gamesRepository.softDelete({ id });
+    const result = await this.gamesRepository.softDelete({ id });
+
+    if (!result.affected) {
+      throw new NotFoundException('Game not found.');
+    }
 
     return true;
   }

@@ -13,19 +13,19 @@ export class AuthService {
   ) {}
 
   async validate({ email, password }: LoginAuthInput): Promise<Auth> {
-    const user = await this.usersService.findOne({ email });
+    try {
+      const user = await this.usersService.findOne({ email });
 
-    if (!user) {
-      throw new UnauthorizedException('iiiihhhhhhhhhhh');
+      if (!(await compare(password, user.password))) {
+        throw new Error();
+      }
+
+      const payload = { sid: user.secure_id };
+      const token = this.jwtService.sign(payload);
+
+      return { token };
+    } catch {
+      throw new UnauthorizedException('The email or password are incorrect.');
     }
-
-    if (!(await compare(password, user.password))) {
-      throw new UnauthorizedException('iiiihhhhhhhhhhh2');
-    }
-
-    const payload = { sid: user.secure_id };
-    const token = this.jwtService.sign(payload);
-
-    return { token };
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import generateRandom from 'src/common/helpers/generateRandom';
 import { User } from 'src/users/entities/user.entity';
@@ -33,7 +33,7 @@ export class ForgotPasswordTokensService {
         token,
         user,
       });
-    } catch (error) {}
+    } catch {}
 
     return true;
   }
@@ -46,7 +46,9 @@ export class ForgotPasswordTokensService {
       { relations: ['user'] },
     );
 
-    if (!token || !token.user) throw new Error('iiihhhhhhhhh');
+    if (!token) {
+      throw new BadRequestException('Invalid token.');
+    }
 
     const expiresIn = new Date(token.updated_at);
     expiresIn.setMinutes(expiresIn.getMinutes() + 30);
@@ -54,7 +56,7 @@ export class ForgotPasswordTokensService {
 
     if (isExpired) {
       await this.forgotPasswordTokenRepository.remove(token);
-      throw new Error('Expired token.');
+      throw new BadRequestException('Expired token.');
     }
 
     token.user.password = data.new_password;
