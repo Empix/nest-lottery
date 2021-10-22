@@ -1,8 +1,8 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
-export class FindOneInput {
-  @Field({ nullable: true })
+export class FindOneUserInput {
+  @Field(() => ID, { nullable: true })
   id?: number;
 
   @Field({ nullable: true })

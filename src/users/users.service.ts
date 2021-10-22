@@ -2,6 +2,7 @@ import { Injectable, UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
+import { FindOneUserInput } from './dto/find-one-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
 
@@ -16,7 +17,7 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(condition: FindOneInput) {
+  async findOne(condition: FindOneUserInput) {
     const user = await this.usersRepository.findOne({ ...condition });
 
     return user;

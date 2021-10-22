@@ -11,7 +11,7 @@ import { User } from './entities/user.entity';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { FindOneInput } from './dto/find-one.input';
+import { FindOneUserInput } from './dto/find-one-user.input';
 
 @Resolver()
 export class UsersResolver {
@@ -29,7 +29,7 @@ export class UsersResolver {
   @Query(() => UserDTO)
   async findOneUser(
     @Args('condition')
-    condition: FindOneInput,
+    condition: FindOneUserInput,
   ) {
     return await this.usersService.findOne(condition);
   }
