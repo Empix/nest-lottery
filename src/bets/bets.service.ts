@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
+import { FindOneBetInput } from './dto/find-one-bet.input';
 import { StoreBetInput } from './dto/store-bet.input';
 import { Bet } from './entities/bet.entity';
 
@@ -18,10 +19,13 @@ export class BetsService {
     });
   }
 
-  async findOne(id: number) {
-    return await this.betsRepository.findOne(id, {
-      relations: ['user', 'game'],
-    });
+  async findOne(conditions: FindOneBetInput) {
+    return await this.betsRepository.findOne(
+      { ...conditions },
+      {
+        relations: ['user', 'game'],
+      },
+    );
   }
 
   async findAllFromUser(user: User) {

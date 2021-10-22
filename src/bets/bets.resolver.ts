@@ -8,6 +8,7 @@ import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/users/entities/user.entity';
 import { BetsService } from './bets.service';
 import { BetDTO } from './dto/bet.dto';
+import { FindOneBetInput } from './dto/find-one-bet.input';
 import { StoreBetInput } from './dto/store-bet.input';
 
 @Resolver()
@@ -25,10 +26,10 @@ export class BetsResolver {
   @Roles(Role.ADMIN)
   @Query(() => BetDTO)
   async findOneBet(
-    @Args('id')
-    id: number,
+    @Args('conditions')
+    conditions: FindOneBetInput,
   ) {
-    return await this.betsService.findOne(id);
+    return await this.betsService.findOne(conditions);
   }
 
   @UseGuards(GqlAuthGuard)
