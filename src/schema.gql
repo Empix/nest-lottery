@@ -46,7 +46,7 @@ type Query {
   findAllGames: [Game!]!
   findOneGame(condition: FindOneGameInput!): Game!
   findAllBets: [Bet!]!
-  findOneBet(id: Float!): Bet!
+  findOneBet(conditions: FindOneBetInput!): Bet!
   findAllBetsFromUser: [Bet!]!
 }
 
@@ -72,6 +72,15 @@ input FindOneGameInput {
   updated_at: DateTime
 }
 
+input FindOneBetInput {
+  id: ID
+  numbers: String
+  user: FindOneUserInput
+  game: FindOneGameInput
+  created_at: DateTime
+  updated_at: DateTime
+}
+
 type Mutation {
   updateUser(data: UpdateUserInput!): User!
   storeUser(data: CreateUserInput!): User!
@@ -81,7 +90,7 @@ type Mutation {
   deleteGame(id: Float!): Boolean!
   restoreGame(id: Float!): Game!
   storeManyBets(data: [StoreBetInput!]!): [Bet!]!
-  storeForgotPasswordToken(data: CreateForgotPasswordTokenInput!): Boolean!
+  storeForgotPasswordToken(email: String!): Boolean!
   updateForgotPasswordToken(data: UpdateForgotPasswordTokenInput!): Boolean!
   login(data: LoginAuthInput!): Auth!
 }
@@ -119,10 +128,6 @@ input UpdateGameInput {
 input StoreBetInput {
   numbers: [Int!]!
   game_id: Int!
-}
-
-input CreateForgotPasswordTokenInput {
-  email: String!
 }
 
 input UpdateForgotPasswordTokenInput {

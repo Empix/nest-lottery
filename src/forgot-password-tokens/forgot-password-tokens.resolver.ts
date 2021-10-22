@@ -11,7 +11,7 @@ export class ForgotPasswordTokensResolver {
 
   @Mutation(() => Boolean)
   async storeForgotPasswordToken(
-    @Args('data')
+    @Args()
     data: CreateForgotPasswordTokenInput,
   ) {
     return await this.forgotPasswordTokensService.store(data);
