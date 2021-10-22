@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { FindOneInput } from './dto/find-one.input';
 
 @Resolver()
 export class UsersResolver {
@@ -27,10 +28,10 @@ export class UsersResolver {
   @Roles(Role.ADMIN)
   @Query(() => UserDTO)
   async findOneUser(
-    @Args('id')
-    id: number,
+    @Args('condition')
+    condition: FindOneInput,
   ) {
-    return await this.usersService.findOne({ id });
+    return await this.usersService.findOne(condition);
   }
 
   @UseGuards(GqlAuthGuard)

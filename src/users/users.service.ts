@@ -16,8 +16,8 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async findOne(condition: Partial<User>) {
-    const user = this.usersRepository.findOne(condition);
+  async findOne(condition: FindOneInput) {
+    const user = await this.usersRepository.findOne({ ...condition });
 
     return user;
   }
