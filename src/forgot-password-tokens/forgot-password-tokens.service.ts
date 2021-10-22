@@ -48,6 +48,15 @@ export class ForgotPasswordTokensService {
 
     if (!token || !token.user) throw new Error('iiihhhhhhhhh');
 
+    const expiresIn = new Date(token.updated_at);
+    expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+    const isExpired = new Date() > expiresIn;
+
+    if (isExpired) {
+      await this.forgotPasswordTokenRepository.remove(token);
+      throw new Error('Expired token.');
+    }
+
     token.user.password = data.new_password;
     await this.userRepository.save(token.user);
 
