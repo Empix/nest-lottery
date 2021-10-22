@@ -41,13 +41,35 @@ type Auth {
 
 type Query {
   findAllUsers: [User!]!
-  findOneUser(id: Float!): User!
+  findOneUser(condition: FindOneUserInput!): User!
   showUser: User!
   findAllGames: [Game!]!
-  findOneGame(id: Float!): Game!
+  findOneGame(condition: FindOneGameInput!): Game!
   findAllBets: [Bet!]!
   findOneBet(id: Float!): Bet!
   findAllBetsFromUser: [Bet!]!
+}
+
+input FindOneUserInput {
+  id: ID
+  name: String
+  email: String
+  secure_id: String
+  role: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input FindOneGameInput {
+  id: ID
+  type: String
+  description: String
+  range: Int
+  price: Float
+  max_number: Int
+  color: String
+  created_at: DateTime
+  updated_at: DateTime
 }
 
 type Mutation {

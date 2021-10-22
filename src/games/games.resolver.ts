@@ -8,6 +8,7 @@ import { GqlAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
+import { FindOneGameInput } from './dto/find-one-game.input';
 
 @Resolver()
 export class GamesResolver {
@@ -22,10 +23,10 @@ export class GamesResolver {
   @UseGuards(GqlAuthGuard)
   @Query(() => GameDTO)
   async findOneGame(
-    @Args('id')
-    id: number,
+    @Args('condition')
+    condition: FindOneGameInput,
   ) {
-    return await this.gamesService.findOne(id);
+    return await this.gamesService.findOne(condition);
   }
 
   @UseGuards(GqlAuthGuard, RolesGuard)
