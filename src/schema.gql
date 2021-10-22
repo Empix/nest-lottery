@@ -117,7 +117,7 @@ input UpdateGameInput {
 }
 
 input StoreBetInput {
-  numbers: String!
+  numbers: [Int!]!
   game_id: Int!
 }
 

@@ -3,9 +3,9 @@ import { IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class StoreBetInput {
-  @Field()
+  @Field(() => [Int])
   @IsNotEmpty({ message: "The numbers field can't be empty." })
-  numbers: string;
+  numbers: number[];
 
   @Field(() => Int)
   @IsNotEmpty({ message: "The game_id field can't be empty." })

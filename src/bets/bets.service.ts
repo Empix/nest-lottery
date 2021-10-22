@@ -32,7 +32,11 @@ export class BetsService {
   }
 
   async storeMany(user: User, data: StoreBetInput[]) {
-    const bets = data.map((bet) => ({ ...bet, user }));
+    const bets = data.map((bet) => ({
+      ...bet,
+      user,
+      numbers: JSON.stringify(bet.numbers),
+    }));
     const savedBets = await this.betsRepository.save(bets);
 
     return savedBets;
