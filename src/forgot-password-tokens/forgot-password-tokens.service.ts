@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import generateRandom from 'src/common/helpers/generateRandom';
+import { MailService } from 'src/mail/mail.service';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateForgotPasswordTokenInput } from './dto/create-forgot-password-token.input';
@@ -14,6 +15,7 @@ export class ForgotPasswordTokensService {
     private forgotPasswordTokenRepository: Repository<ForgotPasswordToken>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private mailService: MailService,
   ) {}
 
   async store(data: CreateForgotPasswordTokenInput) {
@@ -32,6 +34,13 @@ export class ForgotPasswordTokensService {
         ...forgotPasswordToken,
         token,
         user,
+      });
+
+      await this.mailService.sendMail({
+        to: user.email,
+        subject: 'Altere sua senha',
+        template: 'forgot-password-token',
+        context: { token },
       });
     } catch {}
 

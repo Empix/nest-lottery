@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ForgotPasswordToken } from './entities/forgot-password-token.entity';
 import { User } from 'src/users/entities/user.entity';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ForgotPasswordToken, User])],
+  imports: [TypeOrmModule.forFeature([ForgotPasswordToken, User]), MailModule],
   providers: [ForgotPasswordTokensResolver, ForgotPasswordTokensService],
 })
 export class ForgotPasswordTokensModule {}

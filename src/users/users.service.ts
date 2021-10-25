@@ -1,10 +1,12 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginateInput } from 'src/common/dto/paginate.input';
+import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
 import { FindOneUserInput } from './dto/find-one-user.input';
@@ -16,6 +18,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private mailService: MailService,
   ) {}
 
   async findAll(pagination: PaginateInput) {
@@ -72,6 +75,15 @@ export class UsersService {
     const user = this.usersRepository.create(data);
     const userSaved = await this.usersRepository.save(user);
 
+    await this.mailService.sendMail({
+      to: user.email,
+      subject: `Seja muito bem vindo ${user.name}!`,
+      template: 'welcome',
+      context: {
+        name: user.name,
+      },
+    });
+
     return userSaved;
   }
 
@@ -83,6 +95,15 @@ export class UsersService {
       },
     );
     await this.usersRepository.softRemove(toDelete);
+
+    await this.mailService.sendMail({
+      to: user.email,
+      subject: `Que pena que você esteja indo ${user.name}!`,
+      template: 'goodbye',
+      context: {
+        name: user.name,
+      },
+    });
 
     return true;
   }
