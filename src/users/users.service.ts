@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginateInput } from 'src/common/dto/paginate.input';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
 import { FindOneUserInput } from './dto/find-one-user.input';
@@ -17,8 +18,23 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findAll() {
-    return this.usersRepository.find();
+  async findAll(pagination: PaginateInput) {
+    const page = pagination?.page || 1;
+    const perPage = pagination?.perPage || 10;
+
+    const [users, total] = await this.usersRepository.findAndCount({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
+
+    return {
+      data: users,
+      meta: {
+        total,
+        perPage,
+        currentPage: page,
+      },
+    };
   }
 
   async findOne(condition: FindOneUserInput) {

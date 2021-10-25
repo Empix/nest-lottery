@@ -12,6 +12,8 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { FindOneUserInput } from './dto/find-one-user.input';
+import { PaginateInput } from 'src/common/dto/paginate.input';
+import { PaginatedUserDTO } from './dto/paginated-user.dto';
 
 @Resolver()
 export class UsersResolver {
@@ -19,9 +21,12 @@ export class UsersResolver {
 
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  @Query(() => [UserDTO])
-  async findAllUsers() {
-    return await this.usersService.findAll();
+  @Query(() => PaginatedUserDTO)
+  async findAllUsers(
+    @Args('pagination', { nullable: true })
+    pagination: PaginateInput,
+  ) {
+    return await this.usersService.findAll(pagination);
   }
 
   @UseGuards(GqlAuthGuard, RolesGuard)

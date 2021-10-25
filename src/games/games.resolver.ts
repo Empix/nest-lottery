@@ -9,15 +9,20 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { Role } from 'src/auth/enums/role.enum';
 import { FindOneGameInput } from './dto/find-one-game.input';
+import { PaginateInput } from 'src/common/dto/paginate.input';
+import { PaginatedGameDTO } from './dto/paginated-game.dto';
 
 @Resolver()
 export class GamesResolver {
   constructor(private readonly gamesService: GamesService) {}
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => [GameDTO])
-  async findAllGames() {
-    return await this.gamesService.findAll();
+  @Query(() => PaginatedGameDTO)
+  async findAllGames(
+    @Args('pagination', { nullable: true })
+    pagination: PaginateInput,
+  ) {
+    return await this.gamesService.findAll(pagination);
   }
 
   @UseGuards(GqlAuthGuard)

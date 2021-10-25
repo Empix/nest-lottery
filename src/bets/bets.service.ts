@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginateInput } from 'src/common/dto/paginate.input';
 import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { FindOneBetInput } from './dto/find-one-bet.input';
@@ -13,10 +14,24 @@ export class BetsService {
     private betsRepository: Repository<Bet>,
   ) {}
 
-  async findAll() {
-    return await this.betsRepository.find({
+  async findAll(pagination: PaginateInput) {
+    const page = pagination?.page || 1;
+    const perPage = pagination?.perPage || 10;
+
+    const [bets, total] = await this.betsRepository.findAndCount({
       relations: ['user', 'game'],
+      skip: (page - 1) * perPage,
+      take: perPage,
     });
+
+    return {
+      data: bets,
+      meta: {
+        total,
+        perPage,
+        currentPage: page,
+      },
+    };
   }
 
   async findOne(conditions: FindOneBetInput) {
@@ -34,11 +49,25 @@ export class BetsService {
     return bet;
   }
 
-  async findAllFromUser(user: User) {
-    return await this.betsRepository.find({
+  async findAllFromUser(user: User, pagination: PaginateInput) {
+    const page = pagination?.page || 1;
+    const perPage = pagination?.perPage || 10;
+
+    const [bets, total] = await this.betsRepository.findAndCount({
       where: { user_id: user.id },
       relations: ['user', 'game'],
+      skip: (page - 1) * perPage,
+      take: perPage,
     });
+
+    return {
+      data: bets,
+      meta: {
+        total,
+        perPage,
+        currentPage: page,
+      },
+    };
   }
 
   async storeMany(user: User, data: StoreBetInput[]) {
@@ -49,6 +78,13 @@ export class BetsService {
     }));
     const savedBets = await this.betsRepository.save(bets);
 
-    return savedBets;
+    const savedBetsWithRelations = await this.betsRepository.findByIds(
+      savedBets.map((bet) => bet.id),
+      {
+        relations: ['user', 'game'],
+      },
+    );
+
+    return savedBetsWithRelations;
   }
 }

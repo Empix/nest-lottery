@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginateInput } from 'src/common/dto/paginate.input';
 import { Repository } from 'typeorm';
 import { FindOneGameInput } from './dto/find-one-game.input';
 import { StoreGameInput } from './dto/store-game.input';
@@ -18,8 +19,23 @@ export class GamesService {
     private gamesRepository: Repository<Game>,
   ) {}
 
-  async findAll() {
-    return await this.gamesRepository.find();
+  async findAll(pagination: PaginateInput) {
+    const page = pagination?.page || 1;
+    const perPage = pagination?.perPage || 10;
+
+    const [games, total] = await this.gamesRepository.findAndCount({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
+
+    return {
+      data: games,
+      meta: {
+        total,
+        perPage,
+        currentPage: page,
+      },
+    };
   }
 
   async findOne(condition: FindOneGameInput) {

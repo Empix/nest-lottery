@@ -5,10 +5,12 @@ import { Role } from 'src/auth/enums/role.enum';
 import { GqlAuthGuard } from 'src/auth/guards/jwt.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { PaginateInput } from 'src/common/dto/paginate.input';
 import { User } from 'src/users/entities/user.entity';
 import { BetsService } from './bets.service';
 import { BetDTO } from './dto/bet.dto';
 import { FindOneBetInput } from './dto/find-one-bet.input';
+import { PaginatedBetDTO } from './dto/paginated-bet.dto';
 import { StoreBetInput } from './dto/store-bet.input';
 
 @Resolver()
@@ -17,9 +19,12 @@ export class BetsResolver {
 
   @UseGuards(GqlAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
-  @Query(() => [BetDTO])
-  async findAllBets() {
-    return await this.betsService.findAll();
+  @Query(() => PaginatedBetDTO)
+  async findAllBets(
+    @Args('pagination', { nullable: true })
+    pagination: PaginateInput,
+  ) {
+    return await this.betsService.findAll(pagination);
   }
 
   @UseGuards(GqlAuthGuard, RolesGuard)
@@ -33,9 +38,14 @@ export class BetsResolver {
   }
 
   @UseGuards(GqlAuthGuard)
-  @Query(() => [BetDTO])
-  async findAllBetsFromUser(@CurrentUser() user: User) {
-    return await this.betsService.findAllFromUser(user);
+  @Query(() => PaginatedBetDTO)
+  async findAllBetsFromUser(
+    @CurrentUser()
+    user: User,
+    @Args('pagination', { nullable: true })
+    pagination: PaginateInput,
+  ) {
+    return await this.betsService.findAllFromUser(user, pagination);
   }
 
   @UseGuards(GqlAuthGuard)

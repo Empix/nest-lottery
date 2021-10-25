@@ -9,6 +9,17 @@ type User {
   role: String!
 }
 
+type PaginateMeta {
+  total: Int!
+  perPage: Int!
+  currentPage: Int!
+}
+
+type PaginatedUserDTO {
+  data: [User!]!
+  meta: PaginateMeta!
+}
+
 type Game {
   id: ID!
   type: String!
@@ -26,6 +37,11 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type PaginatedGameDTO {
+  data: [Game!]!
+  meta: PaginateMeta!
+}
+
 type Bet {
   id: ID!
   numbers: String!
@@ -35,19 +51,29 @@ type Bet {
   updated_at: DateTime!
 }
 
+type PaginatedBetDTO {
+  data: [Bet!]!
+  meta: PaginateMeta!
+}
+
 type Auth {
   token: String!
 }
 
 type Query {
-  findAllUsers: [User!]!
+  findAllUsers(pagination: Paginate): PaginatedUserDTO!
   findOneUser(condition: FindOneUserInput!): User!
   showUser: User!
-  findAllGames: [Game!]!
+  findAllGames(pagination: Paginate): PaginatedGameDTO!
   findOneGame(condition: FindOneGameInput!): Game!
-  findAllBets: [Bet!]!
+  findAllBets(pagination: Paginate): PaginatedBetDTO!
   findOneBet(conditions: FindOneBetInput!): Bet!
-  findAllBetsFromUser: [Bet!]!
+  findAllBetsFromUser(pagination: Paginate): PaginatedBetDTO!
+}
+
+input Paginate {
+  page: Int
+  perPage: Int
 }
 
 input FindOneUserInput {
