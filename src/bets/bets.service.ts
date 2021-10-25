@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginateInput } from 'src/common/dto/paginate.input';
-import { User } from 'src/users/entities/user.entity';
+import { PaginateInput } from '../common/dto/paginate.input';
+import { GamesService } from '../games/games.service';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { FindOneBetInput } from './dto/find-one-bet.input';
 import { StoreBetInput } from './dto/store-bet.input';
@@ -12,6 +13,7 @@ export class BetsService {
   constructor(
     @InjectRepository(Bet)
     private betsRepository: Repository<Bet>,
+    private gamesService: GamesService,
   ) {}
 
   async findAll(pagination: PaginateInput) {
@@ -71,6 +73,12 @@ export class BetsService {
   }
 
   async storeMany(user: User, data: StoreBetInput[]) {
+    await Promise.all(
+      data.map(async (bet) => {
+        return await this.gamesService.findOne({ id: bet.game_id });
+      }),
+    );
+
     const bets = data.map((bet) => ({
       ...bet,
       user,
