@@ -37,9 +37,7 @@ describe('GamesService', () => {
   });
 
   beforeEach(async () => {
-    for (let method in mockGameRepository) {
-      mockGameRepository[method].mockReset();
-    }
+    jest.resetAllMocks();
   });
 
   it('Should be defined', () => {

@@ -24,9 +24,7 @@ describe('MailService', () => {
   });
 
   beforeEach(async () => {
-    for (let method in mockMailerService) {
-      mockMailerService[method].mockReset();
-    }
+    jest.resetAllMocks();
   });
 
   it('Should be defined', () => {

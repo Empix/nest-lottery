@@ -41,13 +41,7 @@ describe('UsersService', () => {
   });
 
   beforeEach(async () => {
-    for (let method in mockUserRepository) {
-      mockUserRepository[method].mockReset();
-    }
-
-    for (let method in mockMailService) {
-      mockMailService[method].mockReset();
-    }
+    jest.resetAllMocks();
   });
 
   it('Should be defined', () => {
