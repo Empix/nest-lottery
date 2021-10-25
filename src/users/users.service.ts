@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginateInput } from 'src/common/dto/paginate.input';
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 import { Repository } from 'typeorm';
 import { CreateUserInput } from './dto/create-user.input';
 import { FindOneUserInput } from './dto/find-one-user.input';

@@ -1,4 +1,4 @@
-import { Bet } from 'src/bets/entities/bet.entity';
+import { Bet } from '../../bets/entities/bet.entity';
 import {
   Column,
   CreateDateColumn,

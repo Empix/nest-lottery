@@ -10,8 +10,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { Bet } from 'src/bets/entities/bet.entity';
-import { ForgotPasswordToken } from 'src/forgot-password-tokens/entities/forgot-password-token.entity';
+import { Bet } from '../../bets/entities/bet.entity';
+import { ForgotPasswordToken } from '../../forgot-password-tokens/entities/forgot-password-token.entity';
 import { UserPasswordTransformer } from './transformers/user-password.transformer';
 
 @Entity()
