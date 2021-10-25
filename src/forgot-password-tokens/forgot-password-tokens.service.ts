@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import generateRandom from 'src/common/helpers/generateRandom';
-import { MailService } from 'src/mail/mail.service';
-import { User } from 'src/users/entities/user.entity';
+import generateRandom from '../common/helpers/generateRandom';
+import { MailService } from '../mail/mail.service';
+import { User } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateForgotPasswordTokenInput } from './dto/create-forgot-password-token.input';
 import { UpdateForgotPasswordTokenInput } from './dto/update-forgot-password-token.input';
