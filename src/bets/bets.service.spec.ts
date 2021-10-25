@@ -6,6 +6,7 @@ import { User } from '../users/entities/user.entity';
 import { GenerateBet } from '../common/helpers/generateBet';
 import { BetsService } from './bets.service';
 import { Bet } from './entities/bet.entity';
+import { GamesService } from '../games/games.service';
 
 describe('BetsService', () => {
   let betsService: BetsService;
@@ -17,6 +18,10 @@ describe('BetsService', () => {
     findByIds: jest.fn(),
   };
 
+  const mockGameService = {
+    findOne: jest.fn(),
+  };
+
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -24,6 +29,10 @@ describe('BetsService', () => {
         {
           provide: getRepositoryToken(Bet),
           useValue: mockBetRepository,
+        },
+        {
+          provide: GamesService,
+          useValue: mockGameService,
         },
       ],
     }).compile();
@@ -100,6 +109,7 @@ describe('BetsService', () => {
       const bet = BetGenerator.generate();
       mockBetRepository.save.mockReturnValue([bet]);
       mockBetRepository.findByIds.mockReturnValue([bet]);
+      mockGameService.findOne.mockReturnValue({});
 
       const result = await betsService.storeMany(user as User, [
         { ...bet, game_id: 1 },
@@ -109,6 +119,26 @@ describe('BetsService', () => {
       expect(result[0]).toHaveProperty('id');
       expect(mockBetRepository.save).toHaveBeenCalledTimes(1);
       expect(mockBetRepository.findByIds).toHaveBeenCalledTimes(1);
+      expect(mockGameService.findOne).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should return an error if the game does not exists', async () => {
+      const UserGenerator = new GenerateUser();
+      const user = UserGenerator.generate();
+      const BetGenerator = new GenerateBet();
+      const bet = BetGenerator.generate();
+      mockGameService.findOne.mockImplementation(() => {
+        throw new NotFoundException('Game not found.');
+      });
+
+      const result = betsService.storeMany(user as User, [
+        { ...bet, game_id: 1 },
+      ]);
+
+      await expect(result).rejects.toBeInstanceOf(NotFoundException);
+      expect(mockBetRepository.save).toHaveBeenCalledTimes(0);
+      expect(mockBetRepository.findByIds).toHaveBeenCalledTimes(0);
+      expect(mockGameService.findOne).toHaveBeenCalledTimes(1);
     });
   });
 });
