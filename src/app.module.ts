@@ -8,6 +8,7 @@ import { GamesModule } from './games/games.module';
 import { BetsModule } from './bets/bets.module';
 import { ForgotPasswordTokensModule } from './forgot-password-tokens/forgot-password-tokens.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
     BetsModule,
     ForgotPasswordTokensModule,
     AuthModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
